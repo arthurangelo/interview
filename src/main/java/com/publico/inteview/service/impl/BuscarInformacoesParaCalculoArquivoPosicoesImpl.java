@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class BuscarInformacoesParaCalculoArquivoPosicoesImpl implements BuscarIn
 
             String pathFile = environment.getProperty("pasta_arquivos_leitura") + Arquivo.POSICOES.getArquivo() + environment.getProperty("formato_arquivos_leitura");
 
-            File file = new File(getClass().getClassLoader().getResource(pathFile).getFile());
+            InputStream in = getClass().getResourceAsStream(pathFile);
 
             CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader().withColumnSeparator(',').withoutQuoteChar();;
             CsvMapper mapper = new CsvMapper();
@@ -40,7 +41,7 @@ public class BuscarInformacoesParaCalculoArquivoPosicoesImpl implements BuscarIn
                             .configure(JsonGenerator.Feature.IGNORE_UNKNOWN,true)
                             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                             .readerFor(Posicoes.class).with(bootstrapSchema)
-                            .readValues(file);
+                            .readValues(in);
 
             List posicoes =  readValues.readAll();
 

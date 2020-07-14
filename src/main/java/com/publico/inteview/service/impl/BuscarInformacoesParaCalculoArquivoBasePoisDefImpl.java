@@ -15,6 +15,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
@@ -29,7 +30,7 @@ public class BuscarInformacoesParaCalculoArquivoBasePoisDefImpl implements Busca
 
             String pathFile = environment.getProperty("pasta_arquivos_leitura") + Arquivo.BASE_POIS_DEF.getArquivo() + environment.getProperty("formato_arquivos_leitura");
 
-            File file = new File(getClass().getClassLoader().getResource(pathFile).getFile());
+            InputStream in = getClass().getResourceAsStream(pathFile);
 
             CsvSchema bootstrapSchema = CsvSchema.emptySchema().withHeader().withColumnSeparator(',').withoutQuoteChar();;
             CsvMapper mapper = new CsvMapper();
@@ -38,16 +39,13 @@ public class BuscarInformacoesParaCalculoArquivoBasePoisDefImpl implements Busca
                             .configure(JsonGenerator.Feature.IGNORE_UNKNOWN,true)
                             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
                             .readerFor(BasePoisDef.class).with(bootstrapSchema)
-                            .readValues(file);
+                            .readValues(in);
 
             return readValues.readAll();
 
         }catch (Exception e){
             throw new CalculoServiceException("Erro inesperado ao buscar informaçoes.",e);
         }
-
-
-
 
     }
 

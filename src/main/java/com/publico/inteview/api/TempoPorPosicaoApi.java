@@ -20,7 +20,6 @@ public class TempoPorPosicaoApi {
     @GetMapping("/buscarTempoPorPosicao")
     public ResponseEntity buscar(@RequestParam(value = "carro",required = false) String carro) throws CalculoFacadeException {
 
-
         return ResponseEntity.ok().body(calculoFacade.buscarTempoPorPosicao(carro));
     }
 
