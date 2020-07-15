@@ -9,6 +9,8 @@ import com.publico.inteview.facade.CalculoFacade;
 import com.publico.inteview.model.BasePoisDef;
 import com.publico.inteview.model.Posicoes;
 import com.publico.inteview.service.BuscarInformacoesParaCalculo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -19,6 +21,8 @@ import java.util.stream.Collectors;
 
 @Component
 public class CalculoFacadeImpl implements CalculoFacade {
+
+    private static Logger logger = LoggerFactory.getLogger(CalculoFacadeImpl.class);
 
     @Autowired
     private BuscarInformacoesParaCalculo buscarInformacoesParaCalculoArquivoPosicoesImpl;
@@ -56,8 +60,11 @@ public class CalculoFacadeImpl implements CalculoFacade {
                 tempoPorPosicaoDTOList.addAll( buildListTempoPorPosicaoDTO(basePoisDefs, carroPosicao) );
             }
 
+            logger.info("Busca realizada: " +  tempoPorPosicaoDTOList.toString());
+
             return tempoPorPosicaoDTOList;
         } catch (Exception e) {
+            logger.error(e.getMessage(),e);
             throw new CalculoFacadeException(e.getMessage(), e);
         }
 

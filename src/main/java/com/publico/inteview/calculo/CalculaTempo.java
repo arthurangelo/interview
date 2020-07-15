@@ -30,6 +30,7 @@ public class CalculaTempo {
 
     public long calculaTempo() {
 
+        segundos = 0;
        if(periodos.size() <= 1){
            return 0;
        }
